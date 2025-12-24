@@ -236,8 +236,9 @@ function sortMatches(matches: Match[]) {
   const ended: Match[] = [];
 
   matches.forEach(match => {
+    // Parse match time - treat as UTC if it has 'Z', otherwise as local time
     const matchStartTime = new Date(match.matchTime).getTime();
-    const matchEndTime = matchStartTime + 2 * 60 * 60 * 1000;
+    const matchEndTime = matchStartTime + 2 * 60 * 60 * 1000; // 2 hours after match start
 
     if (now >= matchEndTime) {
       ended.push(match);
@@ -262,10 +263,10 @@ function getMatchData() {
       competitionLogo: "https://images.fotmob.com/image_resources/logo/leaguelogo/289.png",
       competitionDarkLogo: "https://imgs.ysscores.com/championship/150/3321747861244.png",
       competitionName: "AFCON 2025",
-      matchTime: '2025-12-24T11:30:00Z',
-      streamUrlEnglish: "https://py.dencreak.com/alwan_hd4.m3u8",
-      streamUrlArabic: "http://69.64.57.208/rts1/playlist.m3u8",
-      streamUrlServer3: "https://edge-mi-009.streamup.eu/sportitalia/sisolocalcio_abr/playlist.m3u8"
+      matchTime: '2025-12-24T12:30:00Z',
+      streamUrlEnglish: "https://edge-mi-009.streamup.eu/sportitalia/sisolocalcio_abr/playlist.m3u8",
+      streamUrlArabic: "https://ottb.live.cf.ww.aiv-cdn.net/dub-nitro/live/clients/dash/enc/yasjqprt7n/out/v1/8086df78d3ce479e8e375147f72942c6/cenc.mpd",
+      streamUrlServer3: "https://1xqndiit0zztnjqq.muchasgraciasaficion.one/bein1.php"
     },
     {
       team1: { name: "Algeria", logo: "https://imagecache.365scores.com/image/upload/f_png,w_34,h_34,c_limit,q_auto:eco,dpr_2,d_Competitors:default1.png/v1/Competitors/5109" },
@@ -286,9 +287,9 @@ function getMatchData() {
       competitionDarkLogo: "https://imgs.ysscores.com/championship/150/3321747861244.png",
       competitionName: "AFCON 2025",
       matchTime: '2025-12-24T17:30:00Z',
-      streamUrlEnglish: "https://davazdah12.sbs/hypochondriarighteously/2",
-      streamUrlArabic: "https://mbc1-enc.edgenextcdn.net/out/v1/b0b3a0e6750d4408bb86d703d5feffd1/index_23.m3u8",
-      streamUrlServer3: "https://1xqndiit0zztnjqq.muchasgraciasaficion.one/bein1.php"
+      streamUrlEnglish: "https://pub-f48f4d14f4d74af8baf6af9e01fbc000.r2.dev/BMax1.m3u8",
+      streamUrlArabic: "http://esv5.net/live/QCKUrDGtHA/hS5z2Pa6S/117891.m3u8",
+      streamUrlServer3: "https://karwan.tv/live/sport-channel-8-1.php"
     },
      {
       team1: { name: "Cameroon", logo: "https://imagecache.365scores.com/image/upload/f_png,w_34,h_34,c_limit,q_auto:eco,dpr_2,d_Competitors:default1.png/v1/Competitors/2387" },
