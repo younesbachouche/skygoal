@@ -287,7 +287,7 @@ function getMatchData() {
       competitionDarkLogo: "https://imgs.ysscores.com/championship/150/3321747861244.png",
       competitionName: "AFCON 2025",
       matchTime: '2025-12-24T17:30:00Z',
-      streamUrlEnglish: "https://pub-f48f4d14f4d74af8baf6af9e01fbc000.r2.dev/BMax1.m3u8",
+     streamUrlEnglish: "https://pub-f48f4d14f4d74af8baf6af9e01fbc000.r2.dev/BMax1.m3u8",
       streamUrlArabic: "http://esv5.net/live/QCKUrDGtHA/hS5z2Pa6S/117891.m3u8",
       streamUrlServer3: "https://karwan.tv/live/sport-channel-8-1.php"
     },
