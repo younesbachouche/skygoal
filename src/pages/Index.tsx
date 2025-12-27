@@ -264,7 +264,7 @@ function getMatchData() {
       competitionLogo: "https://images.fotmob.com/image_resources/logo/leaguelogo/289.png",
       competitionDarkLogo: "https://imgs.ysscores.com/championship/150/3321747861244.png",
       competitionName: "AFCON 2025",
-      matchTime: '2025-12-27T01:00:00',
+      matchTime: '2025-12-27T02:00:00',
       streamUrlEnglish: "http://www.korahapp.online/AFCON-2/video.m3u8",
       streamUrlArabic: "http://www.korahapp.online/AFCON-2/video.m3u8",
       streamUrlServer3: "https://py.dencreak.com/alwan_hd4.m3u8"
@@ -275,7 +275,7 @@ function getMatchData() {
       competitionLogo: "https://images.fotmob.com/image_resources/logo/leaguelogo/289.png",
       competitionDarkLogo: "https://imgs.ysscores.com/championship/150/3321747861244.png",
       competitionName: "AFCON 2025",
-      matchTime: '2025-12-24T02:00:00',
+      matchTime: '2025-12-27T02:00:00',
       streamUrlEnglish: "https://pub-f48f4d14f4d74af8baf6af9e01fbc000.r2.dev/BMax1.m3u8",
       streamUrlArabic: "https://pub-d61f84ee15cd4d98a98ae54242bd0f04.r2.dev/Bein1Fr.m3u8",
       streamUrlServer3: "https://edge-mi-009.streamup.eu/sportitalia/sisolocalcio_abr/playlist.m3u8"
