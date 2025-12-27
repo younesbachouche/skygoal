@@ -257,39 +257,17 @@ function sortMatches(matches: Match[]) {
 function getMatchData() {
   return [
     
+   
     {
-      team1: { name: "Burkina Faso", logo: "https://imagecache.365scores.com/image/upload/f_png,w_34,h_34,c_limit,q_auto:eco,dpr_2,d_Competitors:default1.png/v1/Competitors/5420" },
-      team2: { name: "Equatorial Guinea", logo: "https://imagecache.365scores.com/image/upload/f_png,w_34,h_34,c_limit,q_auto:eco,dpr_2,d_Competitors:default1.png/v1/Competitors/5419" },
+      team1: { name: "Zambia", logo: "https://imgs.ysscores.com/teams/128/2081763118283.png" },
+      team2: { name: "Comores", logo: "https://imgs.ysscores.com/teams/128/7091763070957.png" },
       competitionLogo: "https://images.fotmob.com/image_resources/logo/leaguelogo/289.png",
       competitionDarkLogo: "https://imgs.ysscores.com/championship/150/3321747861244.png",
       competitionName: "AFCON 2025",
-      matchTime: '2025-12-24T12:30:00Z',
-      streamUrlEnglish: "https://edge-mi-009.streamup.eu/sportitalia/sisolocalcio_abr/playlist.m3u8",
-      streamUrlArabic: "https://ottb.live.cf.ww.aiv-cdn.net/dub-nitro/live/clients/dash/enc/yasjqprt7n/out/v1/8086df78d3ce479e8e375147f72942c6/cenc.mpd",
-      streamUrlServer3: "https://1xqndiit0zztnjqq.muchasgraciasaficion.one/bein1.php"
-    },
-    {
-      team1: { name: "Algeria", logo: "https://imagecache.365scores.com/image/upload/f_png,w_34,h_34,c_limit,q_auto:eco,dpr_2,d_Competitors:default1.png/v1/Competitors/5109" },
-      team2: { name: "Sudan", logo: "https://imagecache.365scores.com/image/upload/f_png,w_34,h_34,c_limit,q_auto:eco,dpr_2,d_Competitors:default1.png/v1/Competitors/5099" },
-      competitionLogo: "https://images.fotmob.com/image_resources/logo/leaguelogo/289.png",
-      competitionDarkLogo: "https://imgs.ysscores.com/championship/150/3321747861244.png",
-      competitionName: "AFCON 2025",
-      matchTime: '2025-12-24T15:00:00Z',
-      streamUrlEnglish: "https://davazdah12.sbs/hypochondriarighteously/2",
-      streamUrlArabic: "https://mbc1-enc.edgenextcdn.net/out/v1/b0b3a0e6750d4408bb86d703d5feffd1/index_23.m3u8",
-      streamUrlServer3: "https://1xqndiit0zztnjqq.muchasgraciasaficion.one/bein1.php"
-    },
-    
-    {
-      team1: { name: "Ivory Coast", logo: "https://imagecache.365scores.com/image/upload/f_png,w_34,h_34,c_limit,q_auto:eco,dpr_2,d_Competitors:default1.png/v1/Competitors/2385" },
-      team2: { name: "Mozambique", logo: "https://imagecache.365scores.com/image/upload/f_png,w_34,h_34,c_limit,q_auto:eco,dpr_2,d_Competitors:default1.png/v1/Competitors/5418" },
-      competitionLogo: "https://images.fotmob.com/image_resources/logo/leaguelogo/289.png",
-      competitionDarkLogo: "https://imgs.ysscores.com/championship/150/3321747861244.png",
-      competitionName: "AFCON 2025",
-      matchTime: '2025-12-24T17:30:00Z',
-     streamUrlEnglish: "https://pub-f48f4d14f4d74af8baf6af9e01fbc000.r2.dev/BMax1.m3u8",
-      streamUrlArabic: "http://esv5.net/live/QCKUrDGtHA/hS5z2Pa6S/117891.m3u8",
-      streamUrlServer3: "https://karwan.tv/live/sport-channel-8-1.php"
+      matchTime: '2025-12-27T01:00:00',
+      streamUrlEnglish: "http://www.korahapp.online/AFCON-2/video.m3u8",
+      streamUrlArabic: "http://www.korahapp.online/AFCON-2/video.m3u8",
+      streamUrlServer3: "https://py.dencreak.com/alwan_hd4.m3u8"
     },
      {
       team1: { name: "Cameroon", logo: "https://imagecache.365scores.com/image/upload/f_png,w_34,h_34,c_limit,q_auto:eco,dpr_2,d_Competitors:default1.png/v1/Competitors/2387" },
@@ -297,10 +275,10 @@ function getMatchData() {
       competitionLogo: "https://images.fotmob.com/image_resources/logo/leaguelogo/289.png",
       competitionDarkLogo: "https://imgs.ysscores.com/championship/150/3321747861244.png",
       competitionName: "AFCON 2025",
-      matchTime: '2025-12-24T20:00:00Z',
-      streamUrlEnglish: "https://davazdah12.sbs/hypochondriarighteously/2",
-      streamUrlArabic: "https://mbc1-enc.edgenextcdn.net/out/v1/b0b3a0e6750d4408bb86d703d5feffd1/index_23.m3u8",
-      streamUrlServer3: "https://1xqndiit0zztnjqq.muchasgraciasaficion.one/bein1.php"
+      matchTime: '2025-12-24T02:00:00',
+      streamUrlEnglish: "https://pub-f48f4d14f4d74af8baf6af9e01fbc000.r2.dev/BMax1.m3u8",
+      streamUrlArabic: "https://pub-d61f84ee15cd4d98a98ae54242bd0f04.r2.dev/Bein1Fr.m3u8",
+      streamUrlServer3: "https://edge-mi-009.streamup.eu/sportitalia/sisolocalcio_abr/playlist.m3u8"
     }
    
     
