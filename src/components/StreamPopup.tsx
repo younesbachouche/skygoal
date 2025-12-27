@@ -1,8 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useIsMobile } from "@/hooks/use-mobile";
-import Hls from "hls.js";
+import React, { useEffect, useState } from "react";
+import { X, ExternalLink } from "lucide-react";
 
 interface StreamPopupProps {
   streams: {
@@ -15,211 +12,163 @@ interface StreamPopupProps {
 }
 
 const StreamPopup: React.FC<StreamPopupProps> = ({ streams, onClose }) => {
-  const getFirstAvailable = () => {
-    if (streams.english) return "english" as const;
-    if (streams.arabic) return "arabic" as const;
-    if (streams.server3) return "server3" as const;
-    if (streams.server4) return "server4" as const;
-    return "english" as const;
+  const servers = {
+    english: streams.english?.trim() || "",
+    arabic: streams.arabic?.trim() || "",
+    server3: streams.server3?.trim() || "",
+    server4: streams.server4?.trim() || "",
   };
 
-  const [active, setActive] = useState(getFirstAvailable());
-  const [playbackError, setPlaybackError] = useState<string | null>(null);
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const hlsRef = useRef<Hls | null>(null);
-
-  const getUrl = () => {
-    switch (active) {
-      case "english":
-        return streams.english || "";
-      case "arabic":
-        return streams.arabic || "";
-      case "server3":
-        return streams.server3 || "";
-      case "server4":
-        return streams.server4 || "";
-      default:
-        return "";
-    }
+  const getFirst = () => {
+    if (servers.english) return "english";
+    if (servers.arabic) return "arabic";
+    if (servers.server3) return "server3";
+    if (servers.server4) return "server4";
+    return "english";
   };
 
-  const url = getUrl();
-  const isM3U8 = url.includes("m3u8");
-  const isMobile = useIsMobile();
+  const [active, setActive] = useState<keyof typeof servers>(getFirst());
+  const [iframeKey, setIframeKey] = useState(Date.now());
 
-  useEffect(() => {
-    let cancelled = false;
-    const initHls = async () => {
-      setPlaybackError(null);
-      if (!isM3U8 || !videoRef.current) return;
-
-      if (hlsRef.current) {
-        hlsRef.current.destroy();
-        hlsRef.current = null;
-      }
-
-      try {
-        videoRef.current.crossOrigin = "anonymous";
-      } catch (e) {
-        // ignore
-      }
-
-      if (Hls.isSupported()) {
-        const hls = new Hls({ enableWorker: true, debug: false, xhrSetup: (xhr) => { xhr.withCredentials = false; } });
-        hlsRef.current = hls;
-        hls.loadSource(url);
-        hls.attachMedia(videoRef.current);
-        hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          if (cancelled) return;
-          videoRef.current?.play().catch(() => {});
-        });
-
-        hls.on(Hls.Events.ERROR, (event, data) => {
-          console.warn("HLS error", data);
-          if (data && data.fatal) {
-            try { hls.destroy(); } catch (e) {}
-            hlsRef.current = null;
-
-            if (videoRef.current && videoRef.current.canPlayType("application/vnd.apple.mpegurl")) {
-              videoRef.current.src = url;
-              videoRef.current.play().catch((err) => {
-                console.warn("Native play failed", err);
-                if (!cancelled) setPlaybackError("Playback failed — try opening the stream in a new tab.");
-              });
-            } else {
-              if (!cancelled) setPlaybackError("Playback failed — try opening the stream in a new tab.");
-            }
-          }
-        });
-      } else if (videoRef.current.canPlayType("application/vnd.apple.mpegurl")) {
-        videoRef.current.src = url;
-        videoRef.current.play().catch((err) => {
-          console.warn("Native play failed", err);
-          if (!cancelled) setPlaybackError("Playback failed — try opening the stream in a new tab.");
-        });
-      } else {
-        if (!cancelled) setPlaybackError("This browser does not support in-page HLS playback.");
-      }
-    };
-
-    initHls();
-
-    return () => {
-      if (hlsRef.current) {
-        hlsRef.current.destroy();
-        hlsRef.current = null;
-      }
-      cancelled = true;
-    };
-  }, [url]);
+  const url = servers[active];
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    document.addEventListener("keydown", onKey);
     return () => {
-      document.removeEventListener("keydown", onKey);
       document.body.style.overflow = "auto";
     };
-  }, [onClose]);
+  }, []);
+
+  const handleServerChange = (server: keyof typeof servers) => {
+    // Skip if same server
+    if (server === active) return;
+    
+    // If server4, just open in new tab
+    if (server === "server4" && servers.server4) {
+      window.open(servers.server4, '_blank');
+      return;
+    }
+    
+    // Immediately switch server without showing loading
+    setActive(server);
+    // Force iframe reload by changing key
+    setIframeKey(Date.now());
+  };
+
+  if (!url) {
+    onClose();
+    return null;
+  }
+
+  const isMobile = window.innerWidth < 768;
 
   return (
-    <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+    <div className="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-black/90 p-2 sm:p-4">
+      <div
+        className="absolute inset-0"
+        onClick={onClose}
+      />
 
-      <div className="relative w-full max-w-4xl mx-auto transform transition-all duration-200">
-        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl overflow-hidden">
-          <div className="relative">
-            <div className="absolute top-3 right-3 z-20">
-              <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full w-9 h-9">
-                <X className="w-4 h-4" />
-              </Button>
-            </div>
+      {/* Close button - FLOATING ABOVE POPUP ON MOBILE */}
+      {isMobile && (
+        <button
+          onClick={onClose}
+          className="relative mb-2 z-50 bg-black/80 hover:bg-red-600 text-white p-3 rounded-full transition-colors duration-200 shadow-lg"
+        >
+          <X size={26} className="text-red-400 hover:text-white" />
+        </button>
+      )}
 
-            <div className="p-4 flex flex-wrap gap-3 items-center justify-center">
-              {streams.english && (
-                <button
-                  onClick={() => setActive("english")}
-                  className={`px-4 py-2 rounded-full text-sm font-semibold transition-shadow focus:outline-none w-full sm:w-auto ${
-                    active === "english" ? 'bg-blue-600 text-white shadow-lg' : 'bg-gray-100 dark:bg-gray-800 text-foreground'
-                  }`}
-                >
-                  Server 1
-                </button>
-              )}
+      <div className="relative w-full max-w-4xl bg-gradient-to-br from-gray-900 to-black rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl border border-gray-800">
+        
+        {/* Close button - INSIDE ON DESKTOP */}
+        {!isMobile && (
+          <button
+            onClick={onClose}
+            className="absolute top-3 right-3 z-50 bg-black/80 hover:bg-red-600 text-white p-2 rounded-full transition-colors duration-200 shadow-lg"
+          >
+            <X size={20} className="text-red-400 hover:text-white" />
+          </button>
+        )}
 
-              {streams.arabic && (
-                <button
-                  onClick={() => setActive("arabic")}
-                  className={`px-4 py-2 rounded-full text-sm font-semibold transition-shadow focus:outline-none w-full sm:w-auto ${
-                    active === "arabic" ? 'bg-blue-600 text-white shadow-lg' : 'bg-gray-100 dark:bg-gray-800 text-foreground'
-                  }`}
-                >
-                  Server 2
-                </button>
-              )}
+        {/* Server buttons */}
+        <div className="flex flex-wrap gap-2 p-3 sm:p-4 justify-center bg-gradient-to-r from-gray-900 to-black border-b border-gray-800">
+          {servers.english && (
+            <button
+              onClick={() => handleServerChange("english")}
+              className={`
+                px-4 sm:px-4 py-2.5 sm:py-2 rounded-lg font-medium transition-all duration-200
+                ${active === "english" 
+                  ? 'bg-red-600 hover:bg-red-700 text-white shadow-lg' 
+                  : 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white border border-gray-700'
+                }
+                ${isMobile ? 'text-base min-w-[80px]' : 'text-sm'}
+              `}
+            >
+              Server 1
+            </button>
+          )}
+          {servers.arabic && (
+            <button
+              onClick={() => handleServerChange("arabic")}
+              className={`
+                px-4 sm:px-4 py-2.5 sm:py-2 rounded-lg font-medium transition-all duration-200
+                ${active === "arabic" 
+                  ? 'bg-red-600 hover:bg-red-700 text-white shadow-lg' 
+                  : 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white border border-gray-700'
+                }
+                ${isMobile ? 'text-base min-w-[80px]' : 'text-sm'}
+              `}
+            >
+              Server 2
+            </button>
+          )}
+          {servers.server3 && (
+            <button
+              onClick={() => handleServerChange("server3")}
+              className={`
+                px-4 sm:px-4 py-2.5 sm:py-2 rounded-lg font-medium transition-all duration-200
+                ${active === "server3" 
+                  ? 'bg-red-600 hover:bg-red-700 text-white shadow-lg' 
+                  : 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white border border-gray-700'
+                }
+                ${isMobile ? 'text-base min-w-[80px]' : 'text-sm'}
+              `}
+            >
+              Server 3
+            </button>
+          )}
+          {servers.server4 && (
+            <button
+              onClick={() => window.open(servers.server4, '_blank')}
+              className={`
+                px-4 sm:px-4 py-2.5 sm:py-2 rounded-lg font-medium bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white border border-gray-700 transition-all duration-200 flex items-center gap-2
+                ${isMobile ? 'text-base min-w-[80px]' : 'text-sm'}
+              `}
+            >
+              Server 4 <ExternalLink size={isMobile ? 18 : 14} />
+            </button>
+          )}
+        </div>
 
-              {streams.server3 && (
-                <button
-                  onClick={() => setActive("server3")}
-                  className={`px-4 py-2 rounded-full text-sm font-semibold transition-shadow focus:outline-none w-full sm:w-auto ${
-                    active === "server3" ? 'bg-blue-600 text-white shadow-lg' : 'bg-gray-100 dark:bg-gray-800 text-foreground'
-                  }`}
-                >
-                  Server 3
-                </button>
-              )}
-
-              {streams.server4 && (
-                <button
-                  onClick={() => window.open(streams.server4, "_blank")}
-                  className="px-4 py-2 rounded-full text-sm font-semibold bg-transparent border border-gray-200 dark:border-gray-700 w-full sm:w-auto"
-                >
-                  Backup
-                </button>
-              )}
-            </div>
-
-            <div className="w-full bg-black flex items-center justify-center">
-              <div className="w-full h-[55vh] md:h-[65vh] lg:h-[70vh] rounded-b-2xl overflow-hidden relative">
-                {playbackError ? (
-                  <div className="w-full h-full flex flex-col items-center justify-center bg-black text-center p-4">
-                    <p className="text-sm text-white mb-3">{playbackError}</p>
-                    <div className="flex gap-3">
-                      <Button onClick={() => window.open(url, "_blank")}>
-                        Open in new tab
-                      </Button>
-                      <Button variant="ghost" onClick={() => setPlaybackError(null)}>
-                        Try again
-                      </Button>
-                    </div>
-                  </div>
-                ) : isM3U8 ? (
-                  <video
-                    ref={videoRef}
-                    key={url}
-                    controls
-                    className="w-full h-full bg-black object-contain"
-                    playsInline
-                    autoPlay
-                    muted
-                  />
-                ) : (
-                  <iframe
-                    key={url}
-                    src={url}
-                    title="stream-player"
-                    className="w-full h-full"
-                    style={{ border: "none", backgroundColor: "#000" }}
-                    allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
-                    allowFullScreen
-                    referrerPolicy="no-referrer-when-downgrade"
-                  />
-                )}
-              </div>
-            </div>
+        {/* Stream Container - 16:9 Ratio */}
+        <div className="relative w-full bg-black">
+          <div 
+            className="relative w-full mx-auto"
+            style={{ 
+              paddingBottom: '56.25%',
+              maxWidth: isMobile ? '95vw' : '100%'
+            }}
+          >
+            <iframe
+              key={iframeKey}
+              src={url}
+              className="absolute top-0 left-0 w-full h-full border-0"
+              allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+              allowFullScreen
+              title="Live Stream"
+              // If iframe takes time to load, it will show black screen which is better than loading spinner
+            />
           </div>
         </div>
       </div>
